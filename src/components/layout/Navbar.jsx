@@ -16,8 +16,15 @@ export const Navbar = () => {
   return (
     <nav className="bg-white border-b border-gray-200 shadow-soft sticky top-0 z-30 w-full">
       <div className="px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+        {/* Logo */}
+        <div className="flex-shrink-0">
+          <span className="text-[#9F0712] font-serif text-xl font-bold">
+            RouteLanka
+          </span>
+        </div>
+
         {/* Search */}
-        <div className="hidden md:block flex-1 max-w-md">
+        <div className="hidden md:block flex-1 max-w-md ml-8">
           <div className="relative">
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
             <input

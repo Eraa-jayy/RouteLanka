@@ -33,7 +33,7 @@ export default {
                 },
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'],
+                sans: ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
                 poppins: ['Poppins', 'sans-serif'],
             },
             boxShadow: {

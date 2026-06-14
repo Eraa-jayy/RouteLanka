@@ -20,6 +20,13 @@ import { CustomersPage } from '../pages/CustomersPage';
 import { NotificationsPage } from '../pages/NotificationsPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 
+// Quick Links
+import About from '../pages/QuickLinks/About';
+import ContactUs from '../pages/QuickLinks/ContactUs';
+import FAQ from '../pages/QuickLinks/FAQ';
+import PrivacyPolicy from '../pages/QuickLinks/PrivacyPolicy';
+import TermsAndConditions from '../pages/QuickLinks/TermsAndConditions';
+
 // Protected Route Component
 export const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -139,6 +146,28 @@ export const routes = [
         <NotificationsPage />
       </ProtectedRoute>
     ),
+  },
+
+  // Quick Links routes
+  {
+    path: '/about',
+    element: <About />,
+  },
+  {
+    path: '/contact',
+    element: <ContactUs />,
+  },
+  {
+    path: '/faq',
+    element: <FAQ />,
+  },
+  {
+    path: '/privacy-policy',
+    element: <PrivacyPolicy />,
+  },
+  {
+    path: '/terms-and-conditions',
+    element: <TermsAndConditions />,
   },
 
   // 404 route

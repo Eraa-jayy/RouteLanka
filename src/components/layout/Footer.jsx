@@ -1,5 +1,4 @@
-﻿import { Link } from 'react-router-dom';
-import logo from '../../assets/logo.png';
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   const year = new Date().getFullYear();
@@ -10,11 +9,11 @@ export const Footer = () => {
         <div className="grid gap-10 md:grid-cols-2">
 
           <div className="flex flex-col items-center text-center md:items-start md:text-left">
-            <img
-              src={logo}
-              alt="RouteLanka logo"
-              className="h-16 sm:h-20 md:h-24 w-auto mb-4"
-            />
+            <span
+              className="text-[#9F0712] font-serif text-4xl sm:text-5xl font-bold mb-4 block"
+            >
+              RouteLanka
+            </span>
             <p className="text-slate-400 text-sm leading-7 max-w-md">
               Helping transport companies streamline operations, monitor fleets in real time, optimize routes,
               reduce costs, and make smarter business decisions.
@@ -35,7 +34,7 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/terms" className="hover:text-white transition-colors duration-300">
+                <Link to="/terms-and-conditions" className="hover:text-white transition-colors duration-300">
                   Terms & Conditions
                 </Link>
               </li>
@@ -56,7 +55,7 @@ export const Footer = () => {
         <div className="mt-10 border-t border-slate-800 pt-6">
           <div className="flex flex-col items-center justify-between gap-3 text-sm text-slate-500 sm:flex-row sm:text-left">
             <p>© {year} RouteLanka. All rights reserved.</p>
-            <p>Built for smarter fleet management in Sri Lanka.</p>
+            <p>Smart Transport. Stronger Business.</p>
           </div>
         </div>
       </div>

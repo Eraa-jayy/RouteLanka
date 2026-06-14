@@ -16,9 +16,6 @@ const menuItems = [
   { icon: Bus, label: 'Buses', path: '/buses' },
   { icon: Calendar, label: 'Bookings', path: '/bookings' },
   { icon: DollarSign, label: 'Finance', path: '/finance' },
-];
-
-const bottomItems = [
   { icon: Settings, label: 'Settings', path: '/settings' },
 ];
 
@@ -30,91 +27,77 @@ export const Sidebar = () => {
 
   return (
     <>
-      {/* Mobile toggle button */}
+      {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
-        className="fixed top-4 left-4 z-50 lg:hidden bg-primary-600 text-white p-2 rounded-lg"
+        className="fixed top-4 left-4 z-50 lg:hidden bg-[#9F0712] text-white p-2.5 rounded-xl shadow-lg shadow-[#9F0712]/20 hover:bg-[#c2151f] transition-colors cursor-pointer"
       >
-        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {/* Sidebar */}
       <aside
-        className={`h-screen w-64 bg-gray-900 text-white transform transition-transform duration-300 z-40 overflow-y-auto hidden lg:flex lg:flex-col lg:fixed lg:top-0 lg:left-0 lg:translate-x-0
-          ${sidebarOpen ? 'translate-x-0 flex flex-col' : '-translate-x-full'}
-        `}
+        className={`fixed top-0 left-0 z-40 flex h-screen w-64 flex-col
+        bg-gradient-to-b from-[#2984D1] via-[#2C6DA5] to-[#314158]
+        shadow-2xl transform transition-transform duration-300
+        lg:translate-x-0
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {/* Logo */}
-        <div className="p-6 border-b border-gray-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center font-bold text-lg">
-              F
-            </div>
-            <div>
-              <h1 className="font-bold text-lg">Fleetora</h1>
-              <p className="text-xs text-gray-400">Fleet Management</p>
-            </div>
-          </div>
+        {/* Header */}
+        <div className="px-5 py-6 border-b border-white/15 flex items-center justify-center">
+          <Link to="/" className="flex flex-col text-center w-full">
+            <span className="font-serif text-2xl font-bold text-white tracking-tight">
+              Main Menu
+            </span>
+          </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4">
-          <p className="text-xs font-semibold text-gray-500 mb-4 px-2">MAIN MENU</p>
-          <div className="space-y-2">
-            {menuItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => {
-                  if (window.innerWidth < 1024) toggleSidebar();
-                }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  isActive(item.path)
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-                }`}
-              >
-                <item.icon size={20} />
-                <span className="font-medium">{item.label}</span>
-              </Link>
-            ))}
-          </div>
+        <nav className="flex-1 px-4 py-6 overflow-y-auto space-y-2">
+          {menuItems.map((item) => {
+            const active = isActive(item.path);
 
-          {/* Bottom Navigation */}
-          <div className="space-y-2 mt-8">
-            {bottomItems.map((item) => (
+            return (
               <Link
                 key={item.path}
                 to={item.path}
                 onClick={() => {
                   if (window.innerWidth < 1024) toggleSidebar();
                 }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-                  isActive(item.path)
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-sm ${
+                  active
+                    ? 'bg-white text-[#2C6DA5] font-semibold shadow-lg'
+                    : 'text-white/90 hover:bg-white/10 hover:text-white'
                 }`}
               >
-                <item.icon size={20} />
-                <span className="font-medium">{item.label}</span>
+                <item.icon
+                  size={18}
+                  className={
+                    active ? 'text-[#2C6DA5]' : 'text-white/80'
+                  }
+                />
+                <span>{item.label}</span>
               </Link>
-            ))}
-          </div>
+            );
+          })}
         </nav>
 
-        {/* Logout button at bottom */}
-        <div className="absolute bottom-0 w-full p-4 border-t border-gray-800">
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg text-gray-400 hover:bg-gray-800 hover:text-white transition-all duration-200">
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+        {/* Footer */}
+        <div className="px-4 py-4 border-t border-white/15">
+          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-white/90 hover:bg-white/10 hover:text-white transition-all duration-200 text-sm font-medium cursor-pointer group">
+            <LogOut
+              size={18}
+              className="text-white/80 group-hover:text-white transition-colors"
+            />
+            <span>Logout</span>
           </button>
         </div>
       </aside>
 
-      {/* Mobile overlay */}
+      {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-30 lg:hidden"
           onClick={toggleSidebar}
         />
       )}
