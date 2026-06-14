@@ -7,7 +7,7 @@ export default function About() {
         <div className="container">
           <h1>About RouteLanka</h1>
           <p className="lead">
-            Helping Sri Lankan transport companies digitize operations,
+            Helping Sri Lankan transport companies to digitize operations,
             reduce costs, and grow profitably through intelligent fleet
             management technology.
           </p>
