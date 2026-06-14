@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, TrendingUp, TrendingDown, Filter } from 'lucide-react';
-import { Card, Button, Badge } from '../components/common';
+import { DollarSign, TrendingUp, TrendingDown, Filter, Calendar, Activity } from 'lucide-react';
+import { Card } from '../components/common';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { mockFinance, monthlyRevenueData } from '../utils/mockData';
 import { formatCurrency, formatDate } from '../utils/helpers';
 import { MonthlyRevenueChart } from '../components/charts/ChartComponents';
 
 export const FinancePage = () => {
+  const brandBlue = "#12348c";
+  const brandRed = "#9F0712";
+
   const dates = Array.from(new Set(mockFinance.map((entry) => entry.date)))
     .sort((a, b) => new Date(b) - new Date(a));
   const [selectedDate, setSelectedDate] = useState(dates[0] || '');
@@ -37,20 +40,23 @@ export const FinancePage = () => {
       return acc;
     }, { Fuel: 0, Maintenance: 0, Salaries: 0, Other: 0 });
 
-  const StatCard = ({ icon: Icon, label, value, trend, color }) => (
-    <Card>
-      <div className="flex items-start justify-between">
-        <div>
-          <p className="text-gray-600 text-sm font-medium">{label}</p>
-          <h3 className="text-3xl font-bold text-gray-900 mt-2">{value}</h3>
-          {trend && (
-            <p className={`text-sm mt-2 flex items-center gap-1 ${trend > 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {trend > 0 ? '+' : ''}{trend}% vs last month
+  const StatCard = ({ icon: Icon, label, value, trend, iconColor }) => (
+    <Card className="relative overflow-hidden rounded-3xl bg-white border border-slate-200/70 p-6 shadow-xs hover:shadow-md transition-all duration-300">
+      {/* Soft background blob inside metrics */}
+      <div className="absolute -top-10 -right-10 w-32 h-32 opacity-5 rounded-full blur-2xl" style={{ backgroundColor: iconColor }} />
+      
+      <div className="flex items-start justify-between relative z-10">
+        <div className="space-y-2">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{label}</p>
+          <h3 className="text-3xl font-black text-slate-900 tracking-tight">{value}</h3>
+          {trend !== undefined && (
+            <p className={`text-xs font-bold inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full ${trend > 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100'}`}>
+              {trend > 0 ? '▲' : '▼'} {trend > 0 ? '+' : ''}{trend}% vs last month
             </p>
           )}
         </div>
-        <div className={`p-3 ${color} rounded-lg`}>
-          <Icon className="text-white" size={24} />
+        <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-xs border" style={{ backgroundColor: `${iconColor}0D`, borderColor: `${iconColor}1A` }}>
+          <Icon style={{ color: iconColor }} size={22} />
         </div>
       </div>
     </Card>
@@ -58,24 +64,47 @@ export const FinancePage = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
-        {/* Header */}
+      <div className="space-y-8 bg-slate-50 min-h-screen p-1 text-slate-900 font-sans">
+        
+        {/* TOP HEADER SECTION */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Finance Management</h1>
-            <p className="text-gray-600 mt-1">Track earnings, expenses, and profit analytics</p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-left sm:justify-between border-b border-slate-200/60 pb-6">
+            <div>
+              <motion.h1
+                className="text-3xl font-black tracking-tight relative inline-block text-left"
+                style={{ color: "#314158" }}
+              >
+                Finance Management
+                <motion.span
+                  className="absolute left-0 -bottom-1 h-[3px] rounded-full"
+                  style={{ background: "#314158" }}
+                  initial={{ width: 0 }}
+                  animate={{ width: "100%" }}
+                  transition={{ duration: 0.7, delay: 0.4 }}
+                />
+                <motion.span
+                  className="absolute left-0 -bottom-3.5 h-[2px] rounded-full"
+                  style={{ background: "#9F0712" }}
+                  initial={{ width: 0 }}
+                  animate={{ width: "70%" }}
+                  transition={{ duration: 0.7, delay: 0.7 }}
+                />
+              </motion.h1>
+              {/* <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-5">Profit Analytics & Ledgers</p> */}
+            </div>
           </div>
         </motion.div>
 
-        {/* Stats Grid */}
+        {/* STATS GRID */}
         <motion.div
           className="grid grid-cols-1 md:grid-cols-3 gap-6"
           variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+            hidden: { opacity: 0, y: 15 },
+            visible: { opacity: 1, y: 0, transition: { staggerChildren: 0.1 } },
           }}
           initial="hidden"
           animate="visible"
@@ -85,42 +114,42 @@ export const FinancePage = () => {
             label="Daily Earnings"
             value={formatCurrency(dailyEarnings)}
             trend={23}
-            color="bg-green-600"
+            iconColor="#10b981"
           />
           <StatCard
             icon={TrendingDown}
             label="Daily Expenses"
             value={formatCurrency(dailyExpenses)}
             trend={-5}
-            color="bg-red-600"
+            iconColor={brandRed}
           />
           <StatCard
             icon={DollarSign}
-            label="Net Profit"
+            label="Net Profit margin"
             value={formatCurrency(netProfit)}
             trend={18}
-            color="bg-primary-600"
+            iconColor={brandBlue}
           />
         </motion.div>
 
-        {/* Revenue Chart */}
+        {/* REVENUE CHART MODULE */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card>
-            <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <Card className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-100 pb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Monthly Revenue Trend</h2>
-                <p className="text-sm text-gray-600 mt-1">Revenue comparison over months</p>
+                <h2 className="text-md font-extrabold text-slate-800 uppercase tracking-tight">Monthly Revenue Trend</h2>
+                <p className="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">Route Yield Comparison Metrics</p>
               </div>
-              <div className="flex items-center gap-4">
-                <label className="text-sm font-medium text-gray-700">Select Day</label>
+              <div className="flex items-center gap-3">
+                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1"><Calendar size={12}/> Focus Date</label>
                 <select
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#2984D1] outline-none transition-all text-xs font-bold text-slate-600 cursor-pointer"
                 >
                   {dates.map((date) => (
                     <option key={date} value={date}>{date}</option>
@@ -132,23 +161,24 @@ export const FinancePage = () => {
           </Card>
         </motion.div>
 
-        {/* Transactions */}
+        {/* TRANSACTIONS LEDGER */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <Card>
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+          <Card className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 border-b border-slate-100 pb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">Daily Transactions</h2>
-                <p className="text-sm text-gray-600 mt-1">Income and expenses for {selectedDate}</p>
+                <h2 className="text-md font-extrabold text-slate-800 uppercase tracking-tight">Daily Ledger Log</h2>
+                <p className="text-[10px] text-slate-400 font-semibold uppercase mt-0.5">Record segments for: {selectedDate}</p>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
+                <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest flex items-center gap-1"><Filter size={12}/> Filter ledger</label>
                 <select
                   value={filterType}
                   onChange={(e) => setFilterType(e.target.value)}
-                  className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="h-10 px-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#2984D1] outline-none transition-all text-xs font-bold text-slate-600 cursor-pointer"
                 >
                   <option value="all">All Transactions</option>
                   <option value="earnings">Earnings Only</option>
@@ -157,83 +187,68 @@ export const FinancePage = () => {
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {filteredFinance.length > 0 ? filteredFinance.map((transaction, idx) => (
                 <motion.div
                   key={transaction.id}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="flex items-center justify-between p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+                  transition={{ delay: idx * 0.04 }}
+                  className="flex items-center justify-between p-4 border border-slate-100 rounded-2xl bg-slate-50/30 hover:bg-slate-50 transition-all duration-200 hover:border-slate-200"
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <div className={`p-2 rounded-lg ${transaction.type === 'earnings' ? 'bg-green-100' : 'bg-red-100'}`}>
-                        {transaction.type === 'earnings' ? (
-                          <TrendingUp className="text-green-600" size={20} />
-                        ) : (
-                          <TrendingDown className="text-red-600" size={20} />
-                        )}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-900">{transaction.source}</p>
-                        <p className="text-xs text-gray-600">{transaction.description}</p>
-                      </div>
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-inner" style={{ backgroundColor: transaction.type === 'earnings' ? '#10b98110' : '#ef444410' }}>
+                      {transaction.type === 'earnings' ? (
+                        <TrendingUp className="text-emerald-500" size={18} />
+                      ) : (
+                        <TrendingDown className="text-rose-500" size={18} />
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">{transaction.source}</h4>
+                      <p className="text-[11px] text-slate-400 font-medium mt-0.5">{transaction.description}</p>
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <p className={`text-lg font-bold ${transaction.type === 'earnings' ? 'text-green-600' : 'text-red-600'}`}>
+                  <div className="text-right space-y-1">
+                    <p className="text-md font-black tracking-tight" style={{ color: transaction.type === 'earnings' ? '#10b981' : brandRed }}>
                       {transaction.type === 'earnings' ? '+' : '-'}{formatCurrency(transaction.amount)}
                     </p>
-                    <p className="text-xs text-gray-600">{formatDate(transaction.date)}</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{formatDate(transaction.date)}</p>
                   </div>
                 </motion.div>
               )) : (
-                <div className="p-6 text-center text-gray-600">No transactions found for this day.</div>
+                <div className="p-12 text-center text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50 border border-dashed border-slate-200 rounded-2xl">
+                  No ledger transactions found for selected criteria.
+                </div>
               )}
             </div>
           </Card>
         </motion.div>
 
-        {/* Summary Cards */}
+        {/* STATISTICAL LEDGER BREAKDOWNS */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <Card>
-            <div className="text-center">
-              <p className="text-gray-600 text-sm font-medium">Fuel Expenses</p>
-              <h3 className="text-3xl font-bold text-gray-900 mt-2">{formatCurrency(expenseBreakdown.Fuel)}</h3>
-              <p className="text-xs text-gray-600 mt-2">Daily fuel spend</p>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-gray-600 text-sm font-medium">Maintenance</p>
-              <h3 className="text-3xl font-bold text-gray-900 mt-2">{formatCurrency(expenseBreakdown.Maintenance)}</h3>
-              <p className="text-xs text-gray-600 mt-2">Daily maintenance spend</p>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-gray-600 text-sm font-medium">Salaries</p>
-              <h3 className="text-3xl font-bold text-gray-900 mt-2">{formatCurrency(expenseBreakdown.Salaries)}</h3>
-              <p className="text-xs text-gray-600 mt-2">Daily salary spend</p>
-            </div>
-          </Card>
-
-          <Card>
-            <div className="text-center">
-              <p className="text-gray-600 text-sm font-medium">Other Expenses</p>
-              <h3 className="text-3xl font-bold text-gray-900 mt-2">{formatCurrency(expenseBreakdown.Other)}</h3>
-              <p className="text-xs text-gray-600 mt-2">Other daily costs</p>
-            </div>
-          </Card>
+          {[
+            { label: 'Fuel Expenses', value: expenseBreakdown.Fuel, desc: 'Daily fuel allocation' },
+            { label: 'Maintenance spend', value: expenseBreakdown.Maintenance, desc: 'Daily repair cycles' },
+            { label: 'Salaries outlay', value: expenseBreakdown.Salaries, desc: 'Operator crew payouts' },
+            { label: 'Other Expenses', value: expenseBreakdown.Other, desc: 'Ancillary route fees' }
+          ].map((item, idx) => (
+            <Card key={idx} className="overflow-hidden rounded-3xl bg-white border border-slate-200/70 p-6 shadow-xs hover:shadow-md transition-all duration-300 relative">
+              {/* Decorative brand strip on card boundaries */}
+              <div className="absolute top-0 left-0 w-full h-[4px]" style={{ backgroundColor: idx % 2 === 0 ? brandBlue : brandRed }} />
+              <div className="text-center space-y-2 pt-2">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{item.label}</p>
+                <h3 className="text-2xl font-black text-slate-900 tracking-tight">{formatCurrency(item.value)}</h3>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{item.desc}</p>
+              </div>
+            </Card>
+          ))}
         </motion.div>
       </div>
     </DashboardLayout>

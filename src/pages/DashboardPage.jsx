@@ -9,8 +9,11 @@ import {
   Fuel,
   DollarSign,
   Fingerprint,
+  ArrowRight,
+  UserCheck,
+  X
 } from "lucide-react";
-import { Card, Button, Input } from "../components/common";
+import { Card } from "../components/common";
 import { DashboardLayout } from "../components/layout/DashboardLayout";
 import { formatCurrency } from "../utils/helpers";
 
@@ -95,15 +98,6 @@ export const DashboardPage = () => {
   const handleCancel = () => {
     setSelectedBus(null);
     setShowForm(false);
-    setFormData({
-      busNo: "",
-      route: "",
-      regNo: "",
-      driverName: "",
-      conductorName: "",
-      dieselInput: "",
-      totalIncome: "",
-    });
   };
 
   const handleChange = (e) => {
@@ -131,6 +125,10 @@ export const DashboardPage = () => {
 
     handleCancel();
   };
+
+  // Helper for Input Styling to match Login Page
+  const inputClass = "w-full h-11 rounded-xl bg-slate-50 border border-slate-200 focus:border-[#2984D1] focus:bg-white focus:ring-4 focus:ring-[#2984D1]/10 outline-none transition-all pl-10 pr-4 text-slate-800 placeholder:text-slate-400 text-sm";
+  const labelClass = "block text-left text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5";
 
   return (
     <DashboardLayout>
@@ -166,7 +164,6 @@ export const DashboardPage = () => {
                   transition={{ duration: 0.7, delay: 0.7, ease: "easeOut" }}
                 />
               </motion.h1>
-              
             </div>
 
             <button
@@ -179,108 +176,176 @@ export const DashboardPage = () => {
           </div>
         </motion.div>
 
-        {/* INPUT/MUTATION MANAGEMENT FORM PANEL */}
+        {/* UPDATED: PREMIUM GLASS FORM PANEL (MATCHES LOGIN STYLE) */}
         {showForm && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative"
           >
-            <Card className="p-8 rounded-3xl bg-white border border-slate-200 shadow-xl! shadow-slate-100">
-              <div className="mb-6">
-                <h2
-                  className="text-xl font-extrabold"
-                  style={{ color: brandBlue }}
+            {/* Background Blobs for the form (matching login page) */}
+            <div className="absolute inset-0 z-0 overflow-hidden rounded-3xl pointer-events-none">
+              <div className="absolute -top-20 -left-20 w-64 h-64 bg-[#9F0712]/5 rounded-full blur-3xl" />
+              <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-[#12348c]/10 rounded-full blur-3xl" />
+            </div>
+
+            <Card className="relative z-10 p-8 sm:p-10 rounded-3xl border border-slate-200 bg-white/75 backdrop-blur-2xl shadow-2xl flex flex-col">
+              <div className="flex justify-between items-start mb-8">
+                <div className="text-left">
+                  <h2 className="text-2xl font-extrabold text-slate-800 mb-1">
+                    {selectedBus ? "Modify Record" : "Add Vehicle"}
+                  </h2>
+                  {/* <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200/60 text-slate-600 text-[10px] font-bold uppercase tracking-tight">
+                    Fleet Management Terminal
+                  </div> */}
+                </div>
+                <button 
+                  onClick={handleCancel}
+                  className="p-2 rounded-full hover:bg-slate-100 text-slate-400 transition-colors"
                 >
-                  {selectedBus ? "Modify Vehicle Record" : "Add New Bus"}
-                </h2>
-                {/* <p className="text-sm text-slate-500 font-medium mt-1">
-                  Ensure all information parameters align with regional transport licensing standards.
-                </p> */}
+                  <X size={20} />
+                </button>
               </div>
 
-              <form
-                onSubmit={handleSubmit}
-                className="grid grid-cols-1 md:grid-cols-2 gap-5"
-              >
-                <Input
-                  label="Bus Reference N"
-                  name="busNo"
-                  type="text"
-                  value={formData.busNo}
-                  onChange={handleChange}
-                  placeholder="e.g., BUS-101"
-                  required
-                  className="rounded-xl! focus:border-sky-500!"
-                />
-                <Input
-                  label="Route"
-                  name="route"
-                  type="text"
-                  value={formData.route}
-                  onChange={handleChange}
-                  placeholder="e.g., Colombo - Kandy"
-                  required
-                />
-                <Input
-                  label="Registration No"
-                  name="regNo"
-                  type="text"
-                  value={formData.regNo}
-                  onChange={handleChange}
-                  placeholder="e.g., KA-01-AB-1234"
-                  required
-                />
-                <Input
-                  label="Driver"
-                  name="driverName"
-                  type="text"
-                  value={formData.driverName}
-                  onChange={handleChange}
-                  placeholder="e.g., Raj Kumar"
-                  required
-                />
-                <Input
-                  label="Conductor"
-                  name="conductorName"
-                  type="text"
-                  value={formData.conductorName}
-                  onChange={handleChange}
-                  placeholder="e.g., Nimal Perera"
-                  required
-                />
-                <Input
-                  label="Fuel Allocation (Diesel)"
-                  name="dieselInput"
-                  type="text"
-                  value={formData.dieselInput}
-                  onChange={handleChange}
-                  placeholder="e.g., 120 L"
-                  required
-                />
-                <Input
-                  label="Daily Income (LKR)"
-                  name="totalIncome"
-                  type="number"
-                  value={formData.totalIncome}
-                  onChange={handleChange}
-                  placeholder="e.g., 56000"
-                  required
-                />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+                  
+                  {/* Bus Reference */}
+                  <div>
+                    <label className={labelClass}>Bus Reference No</label>
+                    <div className="relative">
+                      <Bus size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="busNo"
+                        type="text"
+                        value={formData.busNo}
+                        onChange={handleChange}
+                        placeholder="e.g., BUS-101"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
 
-                <div className="md:col-span-2 flex flex-col sm:flex-row gap-3 mt-4 border-t border-slate-100 pt-5">
+                  {/* Route */}
+                  <div>
+                    <label className={labelClass}>Route Path</label>
+                    <div className="relative">
+                      <Route size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="route"
+                        type="text"
+                        value={formData.route}
+                        onChange={handleChange}
+                        placeholder="e.g., Colombo - Kandy"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Registration */}
+                  <div>
+                    <label className={labelClass}>Registration No</label>
+                    <div className="relative">
+                      <Fingerprint size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="regNo"
+                        type="text"
+                        value={formData.regNo}
+                        onChange={handleChange}
+                        placeholder="e.g., KA-01-AB-1234"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Driver */}
+                  <div>
+                    <label className={labelClass}>Driver Name</label>
+                    <div className="relative">
+                      <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="driverName"
+                        type="text"
+                        value={formData.driverName}
+                        onChange={handleChange}
+                        placeholder="Full Name"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Conductor */}
+                  <div>
+                    <label className={labelClass}>Conductor Name</label>
+                    <div className="relative">
+                      <UserCheck size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="conductorName"
+                        type="text"
+                        value={formData.conductorName}
+                        onChange={handleChange}
+                        placeholder="Full Name"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fuel */}
+                  <div>
+                    <label className={labelClass}>Fuel Allocation</label>
+                    <div className="relative">
+                      <Fuel size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="dieselInput"
+                        type="text"
+                        value={formData.dieselInput}
+                        onChange={handleChange}
+                        placeholder="e.g., 120 L"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Income */}
+                  <div className="md:col-span-2">
+                    <label className={labelClass}>Daily Income (LKR)</label>
+                    <div className="relative">
+                      <DollarSign size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                      <input
+                        name="totalIncome"
+                        type="number"
+                        value={formData.totalIncome}
+                        onChange={handleChange}
+                        placeholder="56000"
+                        required
+                        className={inputClass}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Form Buttons - Matching Login Button Style */}
+                <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <button
                     onClick={handleCancel}
                     type="button"
-                    className="w-full sm:w-1/2 px-6 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl transition-all active:scale-98 cursor-pointer text-sm"
+                    className="w-full sm:w-1/3 h-11 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold transition-all text-sm cursor-pointer"
                   >
-                    Discard Changes
+                    Discard
                   </button>
                   <button
                     type="submit"
-                    className="w-full sm:w-1/2 px-6 py-3.5 bg-linear-to-r from-sky-500 to-cyan-500 text-white font-bold rounded-2xl shadow-md hover:brightness-110 transition-all active:scale-98 cursor-pointer text-sm"
+                    className="group relative w-full h-11 rounded-xl overflow-hidden bg-gradient-to-r from-sky-500 to-cyan-500 hover:brightness-110 active:scale-[0.99] transition-all duration-200 shadow-md shadow-sky-500/10 font-bold text-white flex items-center justify-center gap-2 cursor-pointer text-sm"
                   >
-                    {selectedBus ? "Apply Variations" : "Save Changes"}
+                    {selectedBus ? "Apply Variations" : "Save Record"}
+                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
               </form>
@@ -288,7 +353,7 @@ export const DashboardPage = () => {
           </motion.div>
         )}
 
-        {/* FLEET GRID PRESENTATION GRID */}
+        {/* FLEET GRID PRESENTATION GRID (REMAINS UNCHANGED) */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
           {buses.map((bus, idx) => (
             <motion.div
@@ -399,3 +464,5 @@ export const DashboardPage = () => {
     </DashboardLayout>
   );
 };
+
+export default DashboardPage;
