@@ -15,7 +15,7 @@ export default function About() {
       </section>
 
       <section className="container">
-        <h2>Our Mission</h2>
+        <h2>Our Missionnnnnnnn</h2>
         <p>
           RouteLanka exists to help Sri Lankan transport companies run
           smarter, safer, and more profitable operations. We provide a
